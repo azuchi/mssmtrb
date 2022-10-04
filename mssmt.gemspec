@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.authors = ['azuchi']
   spec.email = ['azuchi@chaintope.com']
 
-  spec.summary = 'Ruby implementaion of Merkle Sum Sparse Merkle Tree'
+  spec.summary = 'Ruby implementation of Merkle Sum Sparse Merkle Tree'
   spec.description = spec.summary
   spec.homepage = 'https://github.com/azuchi/mssmtrb'
   spec.license = 'MIT'
