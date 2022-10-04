@@ -1,0 +1,8 @@
+require:
+  - rubocop-rake
+  - rubocop-rspec
+
+AllCops:
+  TargetRubyVersion: 2.7
+RSpec/ExampleLength:
+  Enabled: false
