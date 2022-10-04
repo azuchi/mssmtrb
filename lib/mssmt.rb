@@ -2,7 +2,7 @@
 
 require_relative 'mssmt/version'
 
-module Mssmt
+module MSSMT
   class Error < StandardError
   end
   # Your code goes here...

@@ -4,7 +4,7 @@ require_relative 'lib/mssmt/version'
 
 Gem::Specification.new do |spec|
   spec.name = 'mssmt'
-  spec.version = Mssmt::VERSION
+  spec.version = MSSMT::VERSION
   spec.authors = ['azuchi']
   spec.email = ['azuchi@chaintope.com']
 

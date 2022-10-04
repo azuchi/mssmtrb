@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-RSpec.describe Mssmt do
+RSpec.describe MSSMT do
   it 'has a version number' do
-    expect(Mssmt::VERSION).not_to be nil
+    expect(MSSMT::VERSION).not_to be nil
   end
 end
