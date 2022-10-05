@@ -22,7 +22,7 @@ module MSSMT
     # Calculate node hash.
     # @return [String] hash value.
     def node_hash
-      Digest::SHA256.digest("#{value}#{[sum].pack('Q')}")
+      Digest::SHA256.digest("#{value}#{[sum].pack("Q>")}")
     end
   end
 end
