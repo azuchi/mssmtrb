@@ -24,5 +24,11 @@ module MSSMT
     def node_hash
       Digest::SHA256.digest("#{value}#{[sum].pack("Q>")}")
     end
+
+    # Check whether value and sum is empty.
+    # @return [Boolean]
+    def empty?
+      (value.nil? or value.empty?) && sum.zero?
+    end
   end
 end

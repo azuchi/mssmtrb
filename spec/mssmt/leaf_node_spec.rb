@@ -27,4 +27,40 @@ RSpec.describe MSSMT::LeafNode do
       end
     end
   end
+
+  describe "#empty?" do
+    subject(:empty_result) { leaf.empty? }
+
+    context "with nil value and 0" do
+      let(:leaf) { described_class.new(nil, 0) }
+
+      it "return true" do
+        expect(empty_result).to be true
+      end
+    end
+
+    context "with empty value and 0" do
+      let(:leaf) { described_class.new("", 0) }
+
+      it "return true" do
+        expect(empty_result).to be true
+      end
+    end
+
+    context "with non empty value" do
+      let(:leaf) { described_class.new(Digest::SHA256.digest(""), 0) }
+
+      it "return false" do
+        expect(empty_result).to be false
+      end
+    end
+
+    context "with sum greater than 0" do
+      let(:leaf) { described_class.new(nil, 1) }
+
+      it "return false" do
+        expect(empty_result).to be false
+      end
+    end
+  end
 end
