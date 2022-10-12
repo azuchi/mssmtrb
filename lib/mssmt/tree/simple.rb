@@ -6,17 +6,24 @@ module MSSMT
     class Simple
       attr_reader :tree
 
-      def initialize
-        @tree = Array.new(MSSMT::Tree::MAX_LEVEL + 1)
-        @tree[MSSMT::Tree::MAX_LEVEL] = MSSMT::LeafNode.empty_leaf
+      def initialize(tree = [])
+        @tree = tree
+      end
+
+      # Generate empty tree.
+      # @return [MSSMT::Tree::Simple]
+      def self.empty_tree
+        tree = Array.new(MSSMT::Tree::MAX_LEVEL + 1)
+        tree[MSSMT::Tree::MAX_LEVEL] = MSSMT::LeafNode.empty_leaf
         MSSMT::Tree::MAX_LEVEL.times do |i|
           branch =
             MSSMT::BranchNode.new(
-              @tree[MSSMT::Tree::MAX_LEVEL - i],
-              @tree[MSSMT::Tree::MAX_LEVEL - i]
+              tree[MSSMT::Tree::MAX_LEVEL - i],
+              tree[MSSMT::Tree::MAX_LEVEL - i]
             )
-          @tree[MSSMT::Tree::MAX_LEVEL - (i + 1)] = branch
+          tree[MSSMT::Tree::MAX_LEVEL - (i + 1)] = branch
         end
+        Simple.new(tree)
       end
 
       # Root hash of this tree
