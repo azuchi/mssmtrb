@@ -9,4 +9,6 @@ module MSSMT
   end
 
   autoload :LeafNode, "mssmt/leaf_node"
+  autoload :BranchNode, "mssmt/branch_node"
+  autoload :Tree, "mssmt/tree"
 end

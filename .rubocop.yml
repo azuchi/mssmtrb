@@ -7,3 +7,5 @@ AllCops:
   TargetRubyVersion: 2.7
 RSpec/ExampleLength:
   Enabled: false
+Metrics:
+  Enabled: false
