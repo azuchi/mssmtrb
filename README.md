@@ -36,9 +36,9 @@ tree.insert(key, leaf)
 # Get root node
 root_node = tree.root_node
 # Root hash
-root_hash = tree.root_hash
+root_hash = tree.root_hash.unpack1('H*')
 # or
-root_node.node_hash
+root_node.node_hash.unpack1('H*')
 
 # Get leaf node in tree
 leaf = tree.get(key)
