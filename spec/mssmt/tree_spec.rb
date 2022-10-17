@@ -30,6 +30,21 @@ RSpec.describe MSSMT::Tree do
     end
   end
 
+  describe "#delete" do
+    it do
+      tree = described_class.new
+      leaves = load_leaves
+      leaves.each { |key, leaf| tree.insert(key, leaf) }
+      # rubocop:disable Style/CombinableLoops
+      leaves.each do |key, _|
+        tree.delete(key)
+        expect(tree.get(key).empty?).to be true
+      end
+      # rubocop:enable Style/CombinableLoops
+      expect(tree.root_hash).to eq(tree.empty_tree[0].node_hash)
+    end
+  end
+
   def load_leaves
     csv =
       CSV.read(

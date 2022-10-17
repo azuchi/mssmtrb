@@ -64,6 +64,7 @@ module MSSMT
     # Delete the leaf node found at the given key within the MS-SMT.
     # @param [String] key key with hex format.
     def delete(key)
+      store.root = insert(key, MSSMT::LeafNode.empty_leaf)
     end
 
     # Get leaf node found at the given key within the MS-SMT.
