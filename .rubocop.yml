@@ -9,3 +9,5 @@ RSpec/ExampleLength:
   Enabled: false
 Metrics:
   Enabled: false
+RSpec/MultipleExpectations:
+  Max: 5

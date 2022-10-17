@@ -35,7 +35,9 @@ module MSSMT
     # @return [MSSMT::BranchNode] Updated root node.
     # @raise [MSSMT::Error]
     def insert(key, leaf)
-      raise MSSMT::Error, "key must be #{HASH_SIZE} bytes" unless [key].pack("H*").bytesize == HASH_SIZE
+      unless [key].pack("H*").bytesize == HASH_SIZE
+        raise MSSMT::Error, "key must be #{HASH_SIZE} bytes"
+      end
 
       prev_parents = Array.new(MSSMT::Tree::MAX_LEVEL)
       siblings = Array.new(MSSMT::Tree::MAX_LEVEL)
@@ -47,8 +49,12 @@ module MSSMT
       root =
         walk_up(key, leaf, siblings) do |i, _, _, parent|
           prev_parent = prev_parents[MSSMT::Tree::MAX_LEVEL - 1 - i]
-          store.delete_branch(prev_parent) unless prev_parent == empty_tree[i].node_hash
-          store.insert_branch(parent) unless parent.node_hash == empty_tree[i].node_hash
+          unless prev_parent == empty_tree[i].node_hash
+            store.delete_branch(prev_parent)
+          end
+          unless parent.node_hash == empty_tree[i].node_hash
+            store.insert_branch(parent)
+          end
         end
 
       leaf.empty? ? store.delete_leaf(key) : store.insert_leaf(leaf)
@@ -56,13 +62,15 @@ module MSSMT
     end
 
     # Delete the leaf node found at the given key within the MS-SMT.
-    # @param [String] key
+    # @param [String] key key with hex format.
     def delete(key)
     end
 
     # Get leaf node found at the given key within the MS-SMT.
-    # @param [String] key
+    # @param [String] key key with hex format.
+    # @return [MSSMT::LeafNode] leaf node.
     def get(key)
+      walk_down(key)
     end
 
     private
@@ -97,7 +105,7 @@ module MSSMT
         left, right = get_children(i, current.node_hash)
         next_node, sibling =
           bit_index(i, key).zero? ? [left, right] : [right, left]
-        yield(i, next_node, sibling, current)
+        yield(i, next_node, sibling, current) if block_given?
         current = next_node
       end
       current
@@ -116,7 +124,7 @@ module MSSMT
         left, right =
           bit_index(i, key).zero? ? [current, sibling] : [sibling, current]
         parent = BranchNode.new(left, right)
-        yield(i, current, sibling, parent)
+        yield(i, current, sibling, parent) if block_given?
         current = parent
       end
       current

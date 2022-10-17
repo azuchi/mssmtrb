@@ -16,10 +16,17 @@ RSpec.describe MSSMT::Tree do
   describe "#insert" do
     it do
       tree = described_class.new
-      load_leaves.each { |key, leaf| tree.insert(key, leaf) }
+      leaves = load_leaves
+      leaves.each { |key, leaf| tree.insert(key, leaf) }
       expect(tree.root_hash.unpack1("H*")).to eq(
         "b4ba2dcbdedd58a41eb85f488646a4276ffcee62d2645aa087666b51b98c7d9d"
       )
+      leaves.each do |key, leaf|
+        expect(tree.get(key).node_hash).to eq(leaf.node_hash)
+      end
+      # Specify random key, it return empty leaf.
+      leaf = tree.get(Random.bytes(32).unpack1("H*"))
+      expect(leaf.empty?).to be true
     end
   end
 

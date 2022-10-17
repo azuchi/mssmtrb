@@ -16,7 +16,9 @@ module MSSMT
       # @param [MSSMT::BranchNode] branch
       # @raise [ArgumentError]
       def insert_branch(branch)
-        raise "branch must be MSSMT::BranchNode" unless branch.is_a?(MSSMT::BranchNode)
+        unless branch.is_a?(MSSMT::BranchNode)
+          raise "branch must be MSSMT::BranchNode"
+        end
 
         branches[branch.node_hash] = branch
       end

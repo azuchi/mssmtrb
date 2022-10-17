@@ -13,6 +13,8 @@ RSpec.configure do |config|
   config.expect_with :rspec do |c|
     c.syntax = :expect
   end
+
+  config.define_derived_metadata { |meta| meta[:aggregate_failures] = true }
 end
 
 def fixture_path(relative_path)

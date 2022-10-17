@@ -6,8 +6,12 @@ module MSSMT
     attr_reader :left, :right, :node_hash, :sum
 
     def initialize(left, right)
-      raise ArgumentError, "left must be a branch or leaf node" if !left.is_a?(BranchNode) && !left.is_a?(LeafNode)
-      raise ArgumentError, "right must be a branch or leaf node" if !right.is_a?(BranchNode) && !right.is_a?(LeafNode)
+      if !left.is_a?(BranchNode) && !left.is_a?(LeafNode)
+        raise ArgumentError, "left must be a branch or leaf node"
+      end
+      if !right.is_a?(BranchNode) && !right.is_a?(LeafNode)
+        raise ArgumentError, "right must be a branch or leaf node"
+      end
 
       @left = left
       @right = right
