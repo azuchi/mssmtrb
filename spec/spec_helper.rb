@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "mssmt"
+require "csv"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
@@ -12,4 +13,8 @@ RSpec.configure do |config|
   config.expect_with :rspec do |c|
     c.syntax = :expect
   end
+end
+
+def fixture_path(relative_path)
+  File.join(File.dirname(__FILE__), "fixtures", relative_path)
 end
