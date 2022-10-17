@@ -1,8 +1,8 @@
 # Merkle Sum Sparse Merkle Tree
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/mssmt`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+This is the Merkle Sum Sparse Merkle Tree(MS-SMT) ruby library.
+[MS-SMT](https://github.com/Roasbeef/bips/blob/bip-taro/bip-taro.mediawiki#MerkleSum_Sparse_Merkle_Trees) is a tree 
+that combines the Sparse Merkle Tree and the Merkle-Sum Tree and is defined by the [Taro protocol](https://github.com/Roasbeef/bips/blob/bip-taro/bip-taro.mediawiki).
 
 ## Installation
 
@@ -22,13 +22,36 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+```ruby
+require 'mssmt'
 
-## Development
+# initialize tree
+tree = MSSMT::Tree.new
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+# Add leaf node to tree with key.
+leaf = MSSMT::LeafNode.new("Data", 1_000)
+key = "5bc565ef18dbe0636cd3398a870ae24e1f184e5c484e1af3a502f77a0aceb0c5"
+tree.insert(key, leaf)
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+# Get root node
+root_node = tree.root_node
+# Root hash
+root_hash = tree.root_hash
+# or
+root_node.node_hash
+
+# Get leaf node in tree
+leaf = tree.get(key)
+
+# Get merkle proof correspond to key
+proof = tree.merkle_proof(key)
+
+# Check merkle proof validity.
+result = tree.valid_merkle_proof?(key, leaf, proof)
+
+# Delete leaf node
+tree.delete(key)
+```
 
 ## Contributing
 
