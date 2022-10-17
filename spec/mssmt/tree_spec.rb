@@ -45,6 +45,26 @@ RSpec.describe MSSMT::Tree do
     end
   end
 
+  describe "#merkle_proof" do
+    it do
+      tree = described_class.new
+      leaves = load_leaves
+      leaves.each { |key, leaf| tree.insert(key, leaf) }
+      # rubocop:disable Style/CombinableLoops
+      leaves.each do |key, leaf|
+        proof = tree.merkle_proof(key)
+        expect(tree.valid_merkle_proof?(key, leaf, proof)).to be true
+        # If e alter the proof's leaf sum, then the proof should no longer be valid.
+        altered_leaf = MSSMT::LeafNode.new(leaf.value, leaf.sum + 1)
+        expect(tree.valid_merkle_proof?(key, altered_leaf, proof)).to be false
+        # If e delete the proof's leaf node from the tree, then it should also no longer be valid.
+        tree.delete(key)
+        expect(tree.valid_merkle_proof?(key, leaf, proof)).to be false
+      end
+      # rubocop:enable Style/CombinableLoops
+    end
+  end
+
   def load_leaves
     csv =
       CSV.read(

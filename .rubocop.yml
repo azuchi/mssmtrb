@@ -11,3 +11,7 @@ Metrics:
   Enabled: false
 RSpec/MultipleExpectations:
   Max: 5
+Style/IfUnlessModifier:
+  Enabled: false
+Style/WhileUntilModifier:
+  Enabled: false

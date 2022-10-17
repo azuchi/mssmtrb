@@ -74,6 +74,23 @@ module MSSMT
       walk_down(key)
     end
 
+    # Generate a merkle proof for the leaf node found at the given +key+.
+    # @param [String] key key with hex format.
+    # @return [Array] merkle proof
+    def merkle_proof(key)
+      proof = Array.new(MAX_LEVEL)
+      walk_down(key) { |i, _, sibling, _| proof[MAX_LEVEL - 1 - i] = sibling }
+      proof
+    end
+
+    # Verify whether a merkle proof for the leaf found at the given key is valid.
+    # @param [String] key key with hex format.
+    # @param [MSSMT::LeafNode] leaf leaf node.
+    # @param [Array] proof merkle proof.
+    def valid_merkle_proof?(key, leaf, proof)
+      root_hash == walk_up(key, leaf, proof).node_hash
+    end
+
     private
 
     # Get children
