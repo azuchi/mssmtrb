@@ -30,5 +30,10 @@ module MSSMT
     def empty?
       (value.nil? or value.empty?) && sum.zero?
     end
+
+    def ==(other)
+      return false unless other.is_a?(LeafNode)
+      node_hash == other.node_hash
+    end
   end
 end

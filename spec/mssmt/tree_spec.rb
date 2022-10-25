@@ -41,7 +41,7 @@ RSpec.describe MSSMT::Tree do
         expect(tree.get(key).empty?).to be true
       end
       # rubocop:enable Style/CombinableLoops
-      expect(tree.root_hash).to eq(tree.empty_tree[0].node_hash)
+      expect(tree.root_hash).to eq(described_class.empty_tree[0].node_hash)
     end
   end
 
@@ -54,6 +54,8 @@ RSpec.describe MSSMT::Tree do
       leaves.each do |key, leaf|
         proof = tree.merkle_proof(key)
         expect(tree.valid_merkle_proof?(key, leaf, proof)).to be true
+        compressed_proof = proof.compress
+        expect(compressed_proof.decompress).to eq(proof)
         # If e alter the proof's leaf sum, then the proof should no longer be valid.
         altered_leaf = MSSMT::LeafNode.new(leaf.value, leaf.sum + 1)
         expect(tree.valid_merkle_proof?(key, altered_leaf, proof)).to be false

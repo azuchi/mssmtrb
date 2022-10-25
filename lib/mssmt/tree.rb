@@ -10,10 +10,29 @@ module MSSMT
     # Index of the last bit for MS-SMT keys
     LAST_BIT_INDEX = MAX_LEVEL - 1
 
-    attr_reader :empty_tree, :store
+    attr_reader :store
+
+    def self.empty_tree
+      @empty_tree ||= build_empty_tree
+    end
+
+    # Generate empty tree.
+    # @return [Array]
+    def self.build_empty_tree
+      tree = Array.new(MSSMT::Tree::MAX_LEVEL + 1)
+      tree[MSSMT::Tree::MAX_LEVEL] = MSSMT::LeafNode.empty_leaf
+      MSSMT::Tree::MAX_LEVEL.times do |i|
+        branch =
+          MSSMT::BranchNode.new(
+            tree[MSSMT::Tree::MAX_LEVEL - i],
+            tree[MSSMT::Tree::MAX_LEVEL - i]
+          )
+        tree[MSSMT::Tree::MAX_LEVEL - (i + 1)] = branch
+      end
+      tree.freeze
+    end
 
     def initialize(store: MSSMT::Store::DefaultStore.new)
-      @empty_tree = build_empty_tree
       @store = store
     end
 
@@ -26,7 +45,7 @@ module MSSMT
     # Get root node in tree.
     # @return [MSSMT::BranchNode]
     def root_node
-      store.root.nil? ? empty_tree[0] : store.root
+      store.root.nil? ? Tree.empty_tree[0] : store.root
     end
 
     # Insert a leaf node at the given key within the MS-SMT.
@@ -49,10 +68,10 @@ module MSSMT
       root =
         walk_up(key, leaf, siblings) do |i, _, _, parent|
           prev_parent = prev_parents[MSSMT::Tree::MAX_LEVEL - 1 - i]
-          unless prev_parent == empty_tree[i].node_hash
+          unless prev_parent == Tree.empty_tree[i].node_hash
             store.delete_branch(prev_parent)
           end
-          unless parent.node_hash == empty_tree[i].node_hash
+          unless parent.node_hash == Tree.empty_tree[i].node_hash
             store.insert_branch(parent)
           end
         end
@@ -110,7 +129,7 @@ module MSSMT
     end
 
     def get_node(height, key)
-      return empty_tree[height] if empty_tree[height].node_hash == key
+      return Tree.empty_tree[height] if Tree.empty_tree[height].node_hash == key
       store.branches[key] || store.leaves[key]
     end
 
@@ -151,22 +170,6 @@ module MSSMT
     def bit_index(idx, key)
       value = [key].pack("H*")[idx / 8].ord
       (value >> (idx % 8)) & 1
-    end
-
-    # Generate empty tree.
-    # @return [Array]
-    def build_empty_tree
-      tree = Array.new(MSSMT::Tree::MAX_LEVEL + 1)
-      tree[MSSMT::Tree::MAX_LEVEL] = MSSMT::LeafNode.empty_leaf
-      MSSMT::Tree::MAX_LEVEL.times do |i|
-        branch =
-          MSSMT::BranchNode.new(
-            tree[MSSMT::Tree::MAX_LEVEL - i],
-            tree[MSSMT::Tree::MAX_LEVEL - i]
-          )
-        tree[MSSMT::Tree::MAX_LEVEL - (i + 1)] = branch
-      end
-      tree
     end
   end
 end

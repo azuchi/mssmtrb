@@ -21,5 +21,10 @@ module MSSMT
           "#{left.node_hash}#{right.node_hash}#{[@sum].pack("Q>")}"
         )
     end
+
+    def ==(other)
+      return false unless other.is_a?(BranchNode)
+      node_hash == other.node_hash
+    end
   end
 end
