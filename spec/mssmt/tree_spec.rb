@@ -16,7 +16,10 @@ RSpec.describe MSSMT::Tree do
   describe "#insert" do
     it do
       tree = described_class.new
-      leaves = load_leaves
+      leaves =
+        load_leaves(
+          "b4ba2dcbdedd58a41eb85f488646a4276ffcee62d2645aa087666b51b98c7d9d.csv"
+        )
       leaves.each { |key, leaf| tree.insert(key, leaf) }
       expect(tree.root_hash.unpack1("H*")).to eq(
         "b4ba2dcbdedd58a41eb85f488646a4276ffcee62d2645aa087666b51b98c7d9d"
@@ -33,7 +36,7 @@ RSpec.describe MSSMT::Tree do
   describe "#delete" do
     it do
       tree = described_class.new
-      leaves = load_leaves
+      leaves = rand_leaves(1_000)
       leaves.each { |key, leaf| tree.insert(key, leaf) }
       # rubocop:disable Style/CombinableLoops
       leaves.each do |key, _|
@@ -48,7 +51,7 @@ RSpec.describe MSSMT::Tree do
   describe "#merkle_proof" do
     it do
       tree = described_class.new
-      leaves = load_leaves
+      leaves = rand_leaves(1_000)
       leaves.each { |key, leaf| tree.insert(key, leaf) }
       # rubocop:disable Style/CombinableLoops
       leaves.each do |key, leaf|
@@ -65,15 +68,5 @@ RSpec.describe MSSMT::Tree do
       end
       # rubocop:enable Style/CombinableLoops
     end
-  end
-
-  def load_leaves
-    csv =
-      CSV.read(
-        fixture_path(
-          "b4ba2dcbdedd58a41eb85f488646a4276ffcee62d2645aa087666b51b98c7d9d.csv"
-        )
-      )
-    csv[1..].map { |k, v, s| [k, MSSMT::LeafNode.new([v].pack("H*"), s.to_i)] }
   end
 end
