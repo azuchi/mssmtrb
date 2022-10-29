@@ -11,6 +11,7 @@ module MSSMT
   autoload :Store, "mssmt/store"
   autoload :LeafNode, "mssmt/leaf_node"
   autoload :BranchNode, "mssmt/branch_node"
+  autoload :ComputedNode, "mssmt/computed_node"
   autoload :Tree, "mssmt/tree"
   autoload :Proof, "mssmt/proof"
   autoload :CompressedProof, "mssmt/proof"

@@ -10,7 +10,8 @@ module MSSMT
     # @param [Integer] sum integer value associated with the value
     def initialize(value, sum)
       @value = value
-      @sum = sum
+      warn("sum: #{sum} cause overflow.") if sum > 0xffffffffffffffff # TODO
+      @sum = sum & 0xffffffffffffffff
     end
 
     # Generate empty leaf node.

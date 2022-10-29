@@ -16,15 +16,19 @@ module MSSMT
       @left = left
       @right = right
       @sum = left.sum + right.sum
+      warn("sum:#{@sum} cause overflow.") if @sum > 0xffffffffffffffff # TODO
+      @sum = (@sum & 0xffffffffffffffff)
       @node_hash =
         Digest::SHA256.digest(
           "#{left.node_hash}#{right.node_hash}#{[@sum].pack("Q>")}"
         )
     end
 
+    # Check whether same branch|computed node or not.
+    # @return [Boolean]
     def ==(other)
-      return false unless other.is_a?(BranchNode)
-      node_hash == other.node_hash
+      return false unless [BranchNode, ComputedNode].include?(other.class)
+      node_hash == other.node_hash && sum == other.sum
     end
   end
 end
