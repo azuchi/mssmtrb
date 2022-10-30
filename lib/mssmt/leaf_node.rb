@@ -8,10 +8,13 @@ module MSSMT
     # Constructor
     # @param [String] value node value with binary format.
     # @param [Integer] sum integer value associated with the value
+    # @raise [MSSMT::OverflowError]
     def initialize(value, sum)
       @value = value
-      warn("sum: #{sum} cause overflow.") if sum > 0xffffffffffffffff # TODO
-      @sum = sum & 0xffffffffffffffff
+      if sum > Tree::MAX_SUM_VALUE
+        raise OverflowError, "sum: #{sum} is overflow"
+      end
+      @sum = sum
     end
 
     # Generate empty leaf node.

@@ -16,14 +16,11 @@ RSpec.describe MSSMT::Tree do
   describe "#insert" do
     it do
       tree = described_class.new
-      leaves =
-        load_leaves(
-          "b4ba2dcbdedd58a41eb85f488646a4276ffcee62d2645aa087666b51b98c7d9d.csv"
-        )
+      root_hash =
+        "ac5d459d070650fa031b61c8d1fa785352575a4234537b63953a21c4aba56bac"
+      leaves = load_leaves("#{root_hash}.csv")
       leaves.each { |key, leaf| tree.insert(key, leaf) }
-      expect(tree.root_hash.unpack1("H*")).to eq(
-        "b4ba2dcbdedd58a41eb85f488646a4276ffcee62d2645aa087666b51b98c7d9d"
-      )
+      expect(tree.root_hash.unpack1("H*")).to eq(root_hash)
       leaves.each do |key, leaf|
         expect(tree.get(key).node_hash).to eq(leaf.node_hash)
       end
@@ -67,6 +64,37 @@ RSpec.describe MSSMT::Tree do
         expect(tree.valid_merkle_proof?(key, leaf, proof)).to be false
       end
       # rubocop:enable Style/CombinableLoops
+    end
+  end
+
+  describe "max sum value" do
+    context "with within max sum value" do
+      it do
+        tree = described_class.new
+        leaf1 = MSSMT::LeafNode.new("", 0xfffffffffffffffe)
+        tree.insert(Random.bytes(32).unpack1("H*"), leaf1)
+        leaf2 = MSSMT::LeafNode.new("", 1)
+        tree.insert(Random.bytes(32).unpack1("H*"), leaf2)
+        expect(tree.root_node.sum).to eq(0xffffffffffffffff)
+      end
+    end
+
+    context "with over max sum value" do
+      it do
+        tree = described_class.new
+        leaf1 = MSSMT::LeafNode.new("", 0xfffffffffffffffe)
+        tree.insert(Random.bytes(32).unpack1("H*"), leaf1)
+        leaf2 = MSSMT::LeafNode.new("", 2)
+        expect do
+          tree.insert(Random.bytes(32).unpack1("H*"), leaf2)
+        end.to raise_error(MSSMT::OverflowError)
+        expect do
+          MSSMT::LeafNode.new("", 0xffffffffffffffff + 1)
+        end.to raise_error(MSSMT::OverflowError)
+        expect do
+          MSSMT::ComputedNode.new("", 0xffffffffffffffff + 1)
+        end.to raise_error(MSSMT::OverflowError)
+      end
     end
   end
 end

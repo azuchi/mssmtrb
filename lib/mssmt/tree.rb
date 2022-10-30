@@ -9,6 +9,8 @@ module MSSMT
     MAX_LEVEL = HASH_SIZE * 8
     # Index of the last bit for MS-SMT keys
     LAST_BIT_INDEX = MAX_LEVEL - 1
+    # Maximum sum value
+    MAX_SUM_VALUE = 0xffffffffffffffff
 
     attr_reader :store
 

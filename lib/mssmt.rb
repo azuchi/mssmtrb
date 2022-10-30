@@ -8,6 +8,10 @@ module MSSMT
   class Error < StandardError
   end
 
+  # Error when sum overflows
+  class OverflowError < Error
+  end
+
   autoload :Store, "mssmt/store"
   autoload :LeafNode, "mssmt/leaf_node"
   autoload :BranchNode, "mssmt/branch_node"

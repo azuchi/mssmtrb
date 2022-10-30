@@ -5,6 +5,10 @@ module MSSMT
   class BranchNode
     attr_reader :left, :right, :node_hash, :sum
 
+    # Constructor
+    # @param [MSSMT::LeafNode|MSSMT::BranchNode] left
+    # @param [MSSMT::LeafNode|MSSMT::BranchNode] right
+    # @raise [MSSMT::OverflowError]
     def initialize(left, right)
       if !left.is_a?(BranchNode) && !left.is_a?(LeafNode)
         raise ArgumentError, "left must be a branch or leaf node"
@@ -16,8 +20,10 @@ module MSSMT
       @left = left
       @right = right
       @sum = left.sum + right.sum
-      warn("sum:#{@sum} cause overflow.") if @sum > 0xffffffffffffffff # TODO
-      @sum = (@sum & 0xffffffffffffffff)
+      if @sum > Tree::MAX_SUM_VALUE
+        raise OverflowError, "sum: #{sum} is overflow"
+      end
+
       @node_hash =
         Digest::SHA256.digest(
           "#{left.node_hash}#{right.node_hash}#{[@sum].pack("Q>")}"

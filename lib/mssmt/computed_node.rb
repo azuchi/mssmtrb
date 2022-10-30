@@ -6,11 +6,14 @@ module MSSMT
     attr_reader :node_hash, :sum
 
     # Constructor
-    # @param [String] node_hash node hash with binary fomat.
+    # @param [String] node_hash node hash with binary format.
     # @param [Integer] sum
+    # @raise [MSSMT::OverflowError]
     def initialize(node_hash, sum)
       @node_hash = node_hash
-      warn("sum: #{sum} cause overflow.") if sum > 0xffffffffffffffff # TODO
+      if sum > Tree::MAX_SUM_VALUE
+        raise OverflowError, "sum: #{sum} is overflow"
+      end
       @sum = sum
     end
 

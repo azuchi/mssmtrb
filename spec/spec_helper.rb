@@ -28,7 +28,7 @@ end
 # Generate random leaf
 # @return [MSSMT::LeafNode]
 def rand_leaf
-  sum = Random.rand(0xFFFFFFFFFFFFFFFF)
+  sum = Random.rand(0xFFFFFFFF)
   value = Random.bytes(256)
   MSSMT::LeafNode.new(value, sum)
 end
