@@ -21,8 +21,8 @@ RSpec.describe MSSMT::Proof do
         File.read(fixture_path("compressed.hex"))
       )
 
-      leaves.each_key do |k|
-        proof = tree.merkle_proof(k)
+      leaves.each do |leaf|
+        proof = tree.merkle_proof(leaf.first)
         compressed = proof.compress
         encoded = compressed.encode
         decoded = MSSMT::CompressedProof.decode(encoded)
