@@ -36,5 +36,9 @@ module MSSMT
       return false unless [BranchNode, ComputedNode].include?(other.class)
       node_hash == other.node_hash && sum == other.sum
     end
+
+    def inspect
+      "left: #{left.node_hash.unpack1("H*")}, right: #{right.node_hash.unpack1("H*")}, sum: #{sum}"
+    end
   end
 end
