@@ -2,6 +2,6 @@
 
 RSpec.describe MSSMT do
   it "has a version number" do
-    expect(MSSMT::VERSION).not_to be nil
+    expect(MSSMT::VERSION).not_to be_nil
   end
 end

@@ -35,12 +35,10 @@ RSpec.describe MSSMT::Tree do
       tree = described_class.new
       leaves = rand_leaves(1_000)
       leaves.each { |key, leaf| tree.insert(key, leaf) }
-      # rubocop:disable Style/CombinableLoops
-      leaves.each do |key, _|
+      leaves.each_key do |key|
         tree.delete(key)
         expect(tree.get(key).empty?).to be true
       end
-      # rubocop:enable Style/CombinableLoops
       expect(tree.root_hash).to eq(described_class.empty_tree[0].node_hash)
     end
   end
