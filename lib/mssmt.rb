@@ -2,6 +2,7 @@
 
 require "digest"
 require_relative "mssmt/version"
+require "stringio"
 
 # Merkle Sum Sparse Merkle Tree
 module MSSMT
